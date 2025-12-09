@@ -1,7 +1,6 @@
-﻿using System;
+﻿
 using System.Reflection;
 
-// Класс с закрытыми полями
 class Student
 {
     private string name = "Боб";
@@ -12,30 +11,24 @@ class Program
 {
     static void Main()
     {
-        // Создаем объект Student
         Student student = new Student();
         
-        // Получаем тип объекта
         Type type = student.GetType();
         
         Console.WriteLine("Первоночальное значение");
         
-        // Получаем все закрытые поля
         FieldInfo[] fields = type.GetFields(
-            BindingFlags.NonPublic | // непубличные поля
-            BindingFlags.Instance);   // поля экземпляра (не статические)
+            BindingFlags.NonPublic | 
+            BindingFlags.Instance);  
         
-        // Выводим значения закрытых полей
         foreach (FieldInfo field in fields)
         {
-            // Получаем значение поля
             object value = field.GetValue(student);
             Console.WriteLine($"{field.Name} = {value}");
         }
         
         Console.WriteLine("\nИзменение значений");
         
-        // Меняем значения полей
         foreach (FieldInfo field in fields)
         {
             if (field.Name == "name")
@@ -52,7 +45,6 @@ class Program
         
         Console.WriteLine("\nОбновленные значения");
         
-        // Выводим обновленные значения
         foreach (FieldInfo field in fields)
         {
             object value = field.GetValue(student);

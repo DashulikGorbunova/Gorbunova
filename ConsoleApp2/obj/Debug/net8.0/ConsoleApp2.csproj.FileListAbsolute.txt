@@ -12,3 +12,4 @@ C:\Users\user\Desktop\project\ConsoleApp2\ConsoleApp2\obj\Debug\net8.0\refint\Co
 C:\Users\user\Desktop\project\ConsoleApp2\ConsoleApp2\obj\Debug\net8.0\ConsoleApp2.pdb
 C:\Users\user\Desktop\project\ConsoleApp2\ConsoleApp2\obj\Debug\net8.0\ConsoleApp2.genruntimeconfig.cache
 C:\Users\user\Desktop\project\ConsoleApp2\ConsoleApp2\obj\Debug\net8.0\ref\ConsoleApp2.dll
+C:\Users\user\Desktop\project\ConsoleApp2\ConsoleApp2\obj\Debug\net8.0\ConsoleApp2.sourcelink.json
