@@ -1,0 +1,76 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: appone-api
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=appone_db;Username=appone_user;Password=appone_password
+      - ConnectionStrings__Redis=redis:6379
+      - Jwt__Key=very-secret-key-change-me-in-production
+      - Jwt__Issuer=appone
+      - Jwt__Audience=appone
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: appone-postgres
+    environment:
+      POSTGRES_USER: appone_user
+      POSTGRES_PASSWORD: appone_password
+      POSTGRES_DB: appone_db
+    ports:
+      - "15432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U appone_user -d appone_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: appone-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  liquibase:
+    image: liquibase/liquibase:latest
+    container_name: appone-liquibase
+    environment:
+      LIQUIBASE_INSTALL_PACKAGES: postgresql
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./liquibase:/liquibase/workspace
+    working_dir: /liquibase/workspace
+    command: >
+      --defaults-file=liquibase.properties
+      --changelog-file=changelog/db.changelog-master.xml
+      update
+    profiles:
+      - migrate
+
+volumes:
+  postgres_data:
+  redis_data:
