@@ -63,7 +63,7 @@ public class AuthorizationService : IAuthorizationService
 
     private bool IsApiKey(ClaimsPrincipal user)
     {
-        return user.HasClaim("ApiKey", _ => true);
+        return user.HasClaim(c => c.Type == "ApiKey");
     }
 }
 
